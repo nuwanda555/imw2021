@@ -41,9 +41,10 @@
     <?php
         $servidor="cifpzonzamas.org";
         $usuario="institu3_neptuno";
-        $password="neptuno";
+
+        $password=file_get_contents("claves.txt");  //saco la clave de un fichero
         $bd="institu3_neptuno";   
-    
+
     
         $mysqli = new mysqli($servidor,$usuario,$password,$bd);
         $mysqli->set_charset("utf8");
