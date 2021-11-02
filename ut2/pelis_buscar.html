@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Peliculas</title>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ 
+   <style>
+           #panel {
+               margin: 40px;
+               padding: 30px;
+               border: 4px solid red;
+               border-radius:  30px;
+           }
+ 
+           #cartelera {
+               display: flex;
+               flex-wrap: wrap;
+               margin: 40px;
+               padding: 30px;
+               border: 4px solid darkblue;
+               border-radius:  30px;
+           }
+ 
+           .pelicula {
+               margin: 10px;
+               padding: 5px;
+               border: 2px solid pink;
+               border-radius: 5px;
+           }
+ 
+   </style>
+ 
+   <script>
+           // 
+
+           const urlBase="https://api.themoviedb.org/3/";
+           const urlImg="https://image.tmdb.org/t/p/w500/";
+           const key="3356865d41894a2fa9bfa84b2b5f59bb";
+ 
+           $(document).ready(function(){   //cuando todo esté preparado
+              
+                   $("#btn_buscar").click(function(){
+                           $("#cartelera").html("");   //vacía todo el html que haya dentro del elemento cartelera
+                           const buscar=$("#txt_buscar").val();
+                           $.ajax({
+                                   method  : "GET",
+                                   url         :  `${urlBase}search/movie?api_key=${key}&query=${buscar}`,
+                                   data       :{
+                                          
+                                   },
+                                   success  :  function(resultado){
+                                           const peliculas=resultado.results;
+                                           for(let i=0; i<peliculas.length;i++){       //la i va desde 0 hasta el tamaño del array result
+                                                     if (peliculas[i].poster_path==null) {     //no hay cartel
+                                                            poster="https://www.nicepng.com/png/detail/525-5255833_logo-film-production-png.png";
+                                                    }else{     //si hay cartel
+                                                            poster=urlImg+peliculas[i].poster_path;
+                                                    }
+                                                   const cartel=`<img width='80px' src='${poster}'>`;
+                                                   const titulo=`<div class='pelicula'>${cartel}<br>${peliculas[i].original_title}</div>`;
+                                                   $("#cartelera").append(titulo);
+                                           }
+                                   },
+                                   error:  function(){
+                                          alert("Se ha producido un error")
+                                   }
+                           });
+ 
+ 
+ 
+                   });
+ 
+ 
+                   $("#txt_buscar").keypress(function(e){
+                         if(e.which == 13) {   //si la tecla que se pulsó es el enter
+                               $("#btn_buscar").trigger("click");      //simular un click sobre #btn_buscar
+                         }
+                   });
+ 
+ 
+ 
+           });
+ 
+   </script>
+ 
+ 
+</head>
+<body>
+   <div class="container">
+       <div id="panel">
+               <h1>Multicines Zonzamas</h1>
+               Buscar <input id='txt_buscar' class="form-control" type="text"> <button class="btn btn-primary mt-2" id="btn_buscar">Buscar</button>
+       </div>
+ 
+       <div id="cartelera">
+ 
+ 
+       </div>
+ 
+   </div>
+ 
+ 
+</body>
+</html>
+
+
+
