@@ -9,8 +9,24 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+  <style>
+      .container {
+         border: 4px solid orange;
+         border-radius: 20px;
+         margin: 40px;
+         padding: 30px;
+      }
+
+      th {
+        background-color: lightblue;
+      }
+
+  </style>
+
 </head>
-</head>
+
 
 <script>
 </script>
@@ -18,8 +34,9 @@
 
 
 <body>
-    <table class="table table-striped table-bordered">
-        <tr><th>Codigo</th><th>Nombre</th><th>Ciudad</th></tr>
+   <div class="container">
+   <table class="table table-striped table-bordered">
+        <tr><th>Codigo</th><th>Nombre</th><th>Ciudad</th><th></th></tr>
    
     <?php
         $servidor="cifpzonzamas.org";
@@ -41,13 +58,18 @@
         $resultado= $mysqli->query($sql);
 
         while($registro = $resultado->fetch_object()){
-            echo "<tr><td>$registro->Codigo</td><td>$registro->Denominacion</td><td>$registro->Localidad</td></tr>";
+            $borrar="<a href='/borrar_centro.php?codigo=$registro->Codigo'><img width=32px src='https://www.pngrepo.com/png/190063/512/trash.png'></a>";
+            echo "<tr><td>$registro->Codigo</td><td>$registro->Denominacion</td><td>$registro->Localidad</td><td>$borrar</td></tr>";
         }    
-    
+
+
+
+   
     ?>
     
     
    </table>
+   </div>
 
   
     
