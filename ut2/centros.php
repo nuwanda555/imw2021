@@ -5,12 +5,6 @@
   <title>PHP </title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
   <style>
       .container {
          border: 4px solid orange;
@@ -23,8 +17,16 @@
         background-color: lightblue;
       }
 
+      td {
+         padding-top: 0px !important;
+         padding-bottom: 0px !important;
+      }
+
   </style>
 
+ <?php
+    include "librerias.php";
+?>
 </head>
 
 
@@ -35,24 +37,24 @@
 
 <body>
    <div class="container">
-   <table class="table table-striped table-bordered">
+   <a class="btn btn-success mb-2" href="insertar_centro.php">Insertar centro</a>
+   <table id="tabla" class="table table-striped table-bordered">
+      <thead>
         <tr><th>Codigo</th><th>Nombre</th><th>Ciudad</th><th></th></tr>
-   
+      </thead>
     <?php
         include "conectar.php";
         
-        $sql="select  Codigo,Denominacion,Localidad from centros limit 50";
-
+        $sql="select  Codigo,Denominacion,Localidad from centros";
         $resultado= $mysqli->query($sql);
 
+        echo "<tbody>";
         while($registro = $resultado->fetch_object()){
-            $borrar="<a href='/borrar_centro.php?codigo=$registro->Codigo'><img width=32px src='https://www.pngrepo.com/png/190063/512/trash.png'></a>";
-            echo "<tr><td>$registro->Codigo</td><td>$registro->Denominacion</td><td>$registro->Localidad</td><td>$borrar</td></tr>";
-        }    
+            $borrar="<a class='btn_borrar' href='/borrar_centro.php?codigo=$registro->Codigo'><img width=32px src='https://www.pngrepo.com/png/190063/512/trash.png'></a>";
+            echo "<tr data-codigo='$registro->Codigo'><td>$registro->Codigo</td><td>$registro->Denominacion</td><td>$registro->Localidad</td><td>$borrar</td></tr>\n";
+        }
+        echo "</tbody>";    
 
-
-
-   
     ?>
     
     
@@ -60,11 +62,46 @@
    </div>
 
   
-    
+    <script>
+          $(document).ready(function(){
+
+            $('#tabla').DataTable();
+
+            $(".btn_borrar").click(function(e){  //al hacer click sobre cualquier elemento de la clase btn_borrar
+              const codigo=$(this).closest("tr").data("codigo");
+                e.preventDefault();   //No hagas lo que ibas a hacer
+
+                Swal.fire({
+                  title: '¿Estas seguro que quieres borrar este centro?',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Borrar',
+                  cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    Swal.fire(
+                      'Borrado!',
+                      'El centro se ha borrado correctamente',
+                      'success'
+                    )
+                    setTimeout(function(){ 
+                      window.location.href = "borrar_centro.php?codigo="+codigo; 
+                    }, 1500);
+                  }
+                })
+            });
+
+          });
+
+    </script>
     
     
 
     
+
+
     
 
     
