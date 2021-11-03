@@ -5,9 +5,8 @@
     $nombre=$_REQUEST["nombre"];
     $ciudad=$_REQUEST["ciudad"];
 
-    $sql="insert into centros ('codigo','nombre','ciudad') values ($codigo,'$nombre','$ciudad')";
+    $sql="insert into centros (Codigo,Denominacion,Localidad) values ($codigo,'$nombre','$ciudad')";
     $resultado= $mysqli->query($sql);
-
     header('Location: centros.php');
 ?>
  
