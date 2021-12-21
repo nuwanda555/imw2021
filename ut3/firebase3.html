@@ -1,0 +1,110 @@
+    
+    <style>
+        body {
+            padding: 40px;
+        }
+
+        #mapDiv {
+            margin: 50px;
+            width: 75%;
+            height: 75%;
+        }
+    </style>
+    
+    
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=ArEa1rgs3SfHTJuvTNbDDAYLVTlQfCHeTUu5bbRlwU6DuTR5YvBT3MkYqCkaPGYR' defer></script>
+
+
+    <script>
+        var config = {
+            apiKey: "AIzaSyCviHxFqWH7GltMmt4J5eu9ixG-38j2THo",
+            authDomain: "imw2021.firebaseapp.com",
+            databaseURL: "https://imw2021-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "imw2021",
+            storageBucket: "imw2021.appspot.com",
+            messagingSenderId: "575538414510",
+            appId: "1:575538414510:web:53a24c544d1b76ba69fe3f"
+        };
+
+       const firebaseApp = firebase.initializeApp(config);
+       const db = firebase.database();
+
+
+       function issPos(){
+
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          };
+          
+          function success(pos) {
+            var crd = pos.coords;
+            console.log('Latitude : ' + crd.latitude);
+            console.log('Longitude: ' + crd.longitude);
+        
+            db.ref("zonzamas/pos").set({
+                lat: crd.latitude,
+                lng: crd.longitude
+            });
+
+          };
+          
+          function error(err) {
+            console.warn('ERROR(' + err.code + '): ' + err.message);
+          };
+          
+          navigator.geolocation.getCurrentPosition(success, error, options);
+
+       } 
+
+
+
+   
+    </script>
+
+
+     <!-- Librería para usar mapas de Microsoft Bing, con el API key necesario para que funcione -->
+      <script>
+          var map;
+          function getMap() {
+              var mapOptions = {  //objeto para crear un mapa
+                  mapTypeId: Microsoft.Maps.MapTypeId.aerial,
+                  zoom: 1,
+              };
+              // Initialize the map
+              map = new Microsoft.Maps.Map(document.getElementById("mapDiv"), mapOptions);
+          }
+          //evento que se produce al cargarse la página
+          window.onload = function() {
+              setInterval(function(){
+                  issPos();
+                  console.log("hola")
+              },1000);
+
+              getMap();
+
+
+              db.ref("/zonzamas/pos").on("value",function(snapshot){  //leer desde la rama clientes una vez y cada vez que se modifique algún dato
+                const iss=snapshot.val();  //snapshot.key=clientes
+                const lat=iss.lat;
+                const lng=iss.lng;
+                console.log(map.entities.getLength())
+                const centro=new Microsoft.Maps.Location(lat, lng);
+                const pushpin = new Microsoft.Maps.Pushpin(centro, 
+                  {icon: 'http://educacioncanarias.org/iss.png',
+                  anchor: new Microsoft.Maps.Point(12, 39)});
+                map.entities.removeAt(0);   //borrar la única marca que hay, que es la cero
+                map.entities.push(pushpin);
+              });
+          }
+      </script>
+       
+      <html>
+        <div id='mapDiv' style="position:relative;"></div>
+      </html>
+      
+</div>
