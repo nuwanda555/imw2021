@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-size: 15px;
+      }
+
+      .caja {
+        border: 1px solid brown;
+        margin: 3px;
+        display: inline-block;
+      }
+
+      input {
+        width: 70px;
+        text-align: center;
+      }
+
+      td {
+        border: 1px solid grey;
+        padding: 3px;
+      }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+      //Crea una tabla de nf filas y nc columnas en el elemento id
+      function crearTabla(nf, nc, min, max, id) {
+        var html = "<table class='tabla'>";
+        for (var f = 0; f < nf; f++) {
+          html += "<tr>";
+          for (var c = 0; c < nc; c++) {
+            var numero = Math.floor(Math.random() * max + min);
+            html += `<td contenteditable>${numero}</td>`;
+          }
+          html += "</tr>";
+        }
+        html += "</table>";
+        $("#" + id).html(html);
+      }
+
+      $(document).ready(function () {
+        crearTabla(15, 15, 1, 100, "panel");
+
+        //crea botones con sus correspondientes ids y los mismos input text con sus ids
+        for (var b = 1; b <= 30; b++) {
+          $("#botones").append(`<div class='caja'><button id="boton${b}">Botón ${b}</button><input type="text" id="texto${b}"><div>`);
+        }
+
+        $("#boton1").click(function () {
+          $("td:first , td:last").css("background-color", $("#texto1").val());
+        });
+
+        $("#boton2").click(function () {
+          $("td:even").css("background-color", $("#texto2").val());
+        });
+
+        $("#boton3").click(function () {
+          $("td:odd").css("background-color", $("#texto3").val());
+        });
+
+        $("#boton4").click(function () {
+          $("td").each(function () {
+            var modulo = $(this).text() % 2;
+            if (modulo == 0) {
+              $(this).text($("#texto4").val());
+            }
+          });
+        });
+
+        $("#boton5").click(function () {
+          $("td").each(function () {
+            $(this)
+              .css("background-color", $("#texto5").val())
+              .text(Math.floor(Math.random() * 100 + 1));
+          });
+        });
+
+        $("#boton10").click(function () {
+          let html = "<tr>";
+          for (let i = 0; i < 15; i++) {
+            html = html + "<td>" + Math.floor(Math.random() * 100 + 1) + "</td>";
+          }
+          html = html + "</tr>";
+          $(".tabla").append(html);
+        });
+
+        //Al pulsar boton27 mostrar un tablero de ajedrez
+        $("#boton27").click(function () {
+          let html = "<table>";
+          for (let i = 0; i < 8; i++) {
+            html = html + "<tr>";
+            for (let j = 0; j < 8; j++) {
+              if (i % 2 == 0) {
+                if (j % 2 == 0) {
+                  html = html + "<td style='background-color: black'></td>";
+                } else {
+                  html = html + "<td style='background-color: white'></td>";
+                }
+              } else {
+                if (j % 2 == 0) {
+                  html = html + "<td style='background-color: white'></td>";
+                } else {
+                  html = html + "<td style='background-color: black'></td>";
+                }
+              }
+            }
+            html = html + "</tr>";
+          }
+          html = html + "</table>";
+          $("#panel").html(html);
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="panel"></div>
+    <div id="botones"></div>
+  </body>
+</html>

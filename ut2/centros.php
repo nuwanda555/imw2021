@@ -40,7 +40,11 @@
    <a class="btn btn-success mb-2" href="insertar_centro.php">Insertar centro</a>
    <table id="tabla" class="table table-striped table-bordered">
       <thead>
+<<<<<<< HEAD
         <tr><th>Codigo</th><th>Nombre</th><th>Ciudad</th><th></th><th></th></tr>
+=======
+        <tr><th>Codigo</th><th>Nombre</th><th>Ciudad</th><th></th></tr>
+>>>>>>> 805f74923bba50b41a6db7bb2ec1b8755a15b76f
       </thead>
     <?php
         include "conectar.php";
@@ -51,8 +55,12 @@
         echo "<tbody>";
         while($registro = $resultado->fetch_object()){
             $borrar="<a class='btn_borrar' href='/borrar_centro.php?codigo=$registro->Codigo'><img width=32px src='https://www.pngrepo.com/png/190063/512/trash.png'></a>";
+<<<<<<< HEAD
             $editar="<a class='btn_editar' href='/editar_centro.php?codigo=$registro->Codigo'><img width=32px src='https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/edit.png'></a>";
             echo "<tr data-codigo='$registro->Codigo'><td>$registro->Codigo</td><td>$registro->Denominacion</td><td>$registro->Localidad</td><td>$borrar</td><td>$editar</td></tr>\n";
+=======
+            echo "<tr data-codigo='$registro->Codigo'><td>$registro->Codigo</td><td>$registro->Denominacion</td><td>$registro->Localidad</td><td>$borrar</td></tr>\n";
+>>>>>>> 805f74923bba50b41a6db7bb2ec1b8755a15b76f
         }
         echo "</tbody>";    
 
@@ -68,7 +76,11 @@
 
             $('#tabla').DataTable();
 
+<<<<<<< HEAD
             $("#tabla").on("click",".btn_borrar", function(e){  //al hacer click sobre cualquier elemento de la clase btn_borrar
+=======
+            $(".btn_borrar").click(function(e){  //al hacer click sobre cualquier elemento de la clase btn_borrar
+>>>>>>> 805f74923bba50b41a6db7bb2ec1b8755a15b76f
               const codigo=$(this).closest("tr").data("codigo");
                 e.preventDefault();   //No hagas lo que ibas a hacer
 

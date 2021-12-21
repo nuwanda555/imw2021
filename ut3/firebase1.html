@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <script>
+      // Your web app's Firebase configuration
+      const config = {
+        apiKey: "AIzaSyCviHxFqWH7GltMmt4J5eu9ixG-38j2THo",
+        authDomain: "imw2021.firebaseapp.com",
+        databaseURL: "https://imw2021-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "imw2021",
+        storageBucket: "imw2021.appspot.com",
+        messagingSenderId: "575538414510",
+        appId: "1:575538414510:web:53a24c544d1b76ba69fe3f"
+      };
+    
+      // Initialize Firebase
+      const firebaseApp = firebase.initializeApp(config);
+      const db = firebase.database();
+    
+
+      $(document).ready(function(){
+
+        db.ref("/alumnos").on("value",function(snapshot){  //obtenemos los datos de la base de datos
+            const clave=snapshot.key;
+            const datos = snapshot.val();
+           
+            let html = "<table id='tabla' class='table table-striped table-bordered'><thead><tr><th>Nombre</th><th>Apellido</th><th>Edad</th><th>Borrar</th><th>Editar</th></tr></thead><tbody>";
+            for(let i in datos){
+                htmlBorrar="<td><button class='btn btn-danger btn_borrar'>Borrar</button></td>";
+                htmlEditar="<td><button class='btn btn-warning btn_editar'>Editar</button></td>";
+
+                html += `<tr data-key='${i}'><td class='td_nombre'>${datos[i].nombre}</td><td  class='td_apellidos'>${datos[i].apellidos}</td><td  class='td_edad'>${datos[i].edad}</td>${htmlBorrar}${htmlEditar}</tr>`;
+            }
+            html += "</tbody></table>";
+
+            $("#panel_tabla").html(html);
+
+        });
+
+
+        $("#panel_tabla").on("click",".btn_borrar",function(){
+            const key = $(this).closest("tr").data("key");
+            db.ref("/alumnos/"+key).remove();
+        });
+
+        $("#btn_actualizar").click(function(){
+            const key=$("#panel").data("key");
+            const datos={
+                nombre:$("#nombre").val(),
+                apellidos:$("#apellidos").val(),
+                edad:$("#edad").val()
+            };
+    
+            db.ref("alumnos/"+key).update(datos);  
+            $("#nombre").val("");
+            $("#apellidos").val("");
+            $("#edad").val("");
+            $("#btn_actualizar").hide();
+            $("#btn_guardar").show();  
+
+        
+        })
+
+
+
+        $("#panel_tabla").on("click",".btn_editar",function(){
+            const key = $(this).closest("tr").data("key");
+            const nombre = $(this).closest("tr").find(".td_nombre").text();
+            const apellidos = $(this).closest("tr").find(".td_apellidos").text();
+            const edad = $(this).closest("tr").find(".td_edad").text();
+
+            
+            $("#nombre").val(nombre);
+            $("#apellidos").val(apellidos);
+            $("#edad").val(edad);
+            $("#panel").data("key",key);
+
+            $("#btn_guardar").hide();
+            $("#btn_actualizar").show();
+
+
+        });
+
+
+
+        $("#btn_guardar").click(function(){
+          var nombre = $("#nombre").val();
+          var apellidos = $("#apellidos").val();
+          var edad = $("#edad").val();
+          const datos={
+            nombre:nombre,
+            apellidos:apellidos,
+            edad:edad
+          }
+
+          db.ref("alumnos").push(datos);
+          $("#nombre").val("");
+          $("#apellidos").val("");
+          $("#edad").val("");
+        });
+      });
+      
+
+    
+    </script>
+
+    <style>
+        #panel {
+
+            background-color: #f0f0f0;
+            padding: 60px;
+            border: 4px solid #d0d0d0;
+            border-radius: 25px;
+            margin: 80px;
+        }
+
+        #pantalla {
+            display: flex;
+        }
+    </style>
+
+
+</head>
+<body>
+    <div id="pantalla">
+        <div id="panel">
+            <label for="">Nombre</label>
+            <input class="form-control" type="text" id="nombre" placeholder="Nombre">
+            <label for="">Apellidos</label>
+            <input class="form-control" type="text" id="apellidos" placeholder="Apellidos">
+            <label for="">Edad</label>
+            <input class="form-control" type="text" id="edad" placeholder="Edad">
+            <button class="mt-3" id="btn_guardar">Guardar</button>
+            <button style="display: none" class="mt-3" id="btn_actualizar">Actualizar</button>
+    
+        </div>
+    
+        <div id="panel_tabla">
+    
+        </div>
+
+    </div>
+
+</body>
+</html>
+
